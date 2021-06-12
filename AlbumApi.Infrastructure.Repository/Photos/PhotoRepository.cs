@@ -31,7 +31,7 @@ namespace AlbumApi.Infrastructure.Repository.Photos
 
         public async Task<Photo> GetPhoto(int id, CancellationToken cancellationToken)
         {
-            var entity = await _db.Photos.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+            var entity = await _db.Photos.Include(x => x.Album).FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
             if (entity == null)
             {
                 throw new Exception("Photo not found");

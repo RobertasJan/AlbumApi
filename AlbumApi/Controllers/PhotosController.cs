@@ -1,5 +1,6 @@
 ﻿using AlbumApi.Domain.Models;
 using AlbumApi.Domain.Repository.Photos;
+using AlbumApi.Utility.Hateoas;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,7 @@ namespace AlbumApi.Controllers
     public class PhotosController : ControllerBase
     {
         private readonly IPhotoRepository _photoRepository;
+        private readonly LinkGenerator linkGenerator = new LinkGenerator();
 
         public PhotosController(IPhotoRepository photoRepository)
         {
@@ -25,23 +27,32 @@ namespace AlbumApi.Controllers
 
         // GET: api/<PhotosController>
         [HttpGet]
-        public Task<ICollection<Photo>> Get(CancellationToken cancellationToken)
+        public async Task<ICollection<Photo>> Get(CancellationToken cancellationToken)
         {
-            return _photoRepository.GetPhotos(cancellationToken);
+            var photos = await _photoRepository.GetPhotos(cancellationToken);
+            foreach (var ph in photos)
+            {
+                linkGenerator.GenerateLinksForPhoto(ph, HttpContext);
+            }
+            return photos;
         }
 
         // GET api/<PhotosController>/5
         [HttpGet("{id}")]
-        public Task<Photo> Get(int id, CancellationToken cancellationToken)
+        public async Task<Photo> Get(int id, CancellationToken cancellationToken)
         {
-            return _photoRepository.GetPhoto(id, cancellationToken);
+            var photo = await _photoRepository.GetPhoto(id, cancellationToken);
+            linkGenerator.GenerateLinksForPhoto(photo, HttpContext);
+            return photo;
         }
 
         // POST api/<PhotoController>
         [HttpPost]
-        public Task<Photo> Post([FromBody] Photo photo, CancellationToken cancellationToken)
+        public async Task<Photo> Post([FromBody] Photo photo, CancellationToken cancellationToken)
         {
-            return _photoRepository.SetPhoto(photo, cancellationToken);
+            var photoResp = await _photoRepository.SetPhoto(photo, cancellationToken);
+            linkGenerator.GenerateLinksForPhoto(photoResp, HttpContext);
+            return photoResp;
         }
 
         // DELETE api/<PhotoController>/5
@@ -50,5 +61,6 @@ namespace AlbumApi.Controllers
         {
             return _photoRepository.DeletePhoto(id, cancellationToken);
         }
+ 
     }
 }

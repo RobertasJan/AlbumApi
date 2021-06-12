@@ -1,5 +1,6 @@
 ﻿using AlbumApi.Domain.Models;
 using AlbumApi.Domain.Repository.Albums;
+using AlbumApi.Utility.Hateoas;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,7 @@ namespace AlbumApi.Controllers
     public class AlbumsController : ControllerBase
     {
         private readonly IAlbumRepository _albumRepository;
+        private readonly LinkGenerator linkGenerator = new LinkGenerator();
 
         public AlbumsController(IAlbumRepository albumRepository)
         {
@@ -25,23 +27,36 @@ namespace AlbumApi.Controllers
 
         // GET: api/<AlbumController>
         [HttpGet]
-        public Task<ICollection<Album>> Get(CancellationToken cancellationToken)
+        public async Task<ICollection<Album>> Get(CancellationToken cancellationToken)
         {
-            return _albumRepository.GetAlbums(cancellationToken);
+            var albums = await _albumRepository.GetAlbums(cancellationToken);
+            foreach (var al in albums)
+            {
+                linkGenerator.GenerateLinksForAlbum(al, HttpContext);
+            }
+            return albums;
         }
 
         // GET api/<AlbumController>/5
         [HttpGet("{id}")]
-        public Task<Album> Get(int id, CancellationToken cancellationToken)
+        public async Task<Album> Get(int id, CancellationToken cancellationToken)
         {
-            return _albumRepository.GetAlbum(id, cancellationToken);
+            var album = await _albumRepository.GetAlbum(id, cancellationToken);
+            linkGenerator.GenerateLinksForAlbum(album, HttpContext);
+            foreach (var ph in album.Photos)
+            {
+                linkGenerator.GenerateLinksForPhoto(ph, HttpContext);
+            }
+            return album;
         }
 
         // POST api/<AlbumController>
         [HttpPost]
-        public Task<Album> Post([FromBody] Album album, CancellationToken cancellationToken)
+        public async Task<Album> Post([FromBody] Album album, CancellationToken cancellationToken)
         {
-            return _albumRepository.SetAlbum(album, cancellationToken);
+            var albumResp = await _albumRepository.SetAlbum(album, cancellationToken);
+            linkGenerator.GenerateLinksForAlbum(albumResp, HttpContext);
+            return albumResp;
         }
 
         // DELETE api/<AlbumController>/5
@@ -50,5 +65,6 @@ namespace AlbumApi.Controllers
         {
             return _albumRepository.DeleteAlbum(id, cancellationToken);
         }
+
     }
 }
