@@ -21,7 +21,7 @@ namespace AlbumApi.Infrastructure.Migrations
 
             modelBuilder.Entity("AlbumApi.Domain.Models.Album", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int?>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -57,7 +57,7 @@ namespace AlbumApi.Infrastructure.Migrations
 
             modelBuilder.Entity("AlbumApi.Domain.Models.Photo", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int?>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
