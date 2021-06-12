@@ -4,4 +4,10 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\AlbumApi.Domain.Repository\AlbumApi.Domain.Repository.csproj" />
+    <ProjectReference Include="..\AlbumApi.Domain\AlbumApi.Domain.csproj" />
+    <ProjectReference Include="..\AlbumApi.Infrastructure\AlbumApi.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>
