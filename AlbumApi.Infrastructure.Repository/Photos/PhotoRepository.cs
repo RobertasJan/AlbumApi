@@ -26,6 +26,7 @@ namespace AlbumApi.Infrastructure.Repository.Photos
                 throw new Exception("Photo not found");
             }
             _db.Photos.Remove(entity);
+            await _db.SaveChangesAsync(cancellationToken);
         }
 
         public async Task<Photo> GetPhoto(int id, CancellationToken cancellationToken)

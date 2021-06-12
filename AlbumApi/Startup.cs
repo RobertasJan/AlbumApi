@@ -1,4 +1,8 @@
+using AlbumApi.Domain.Repository.Albums;
+using AlbumApi.Domain.Repository.Photos;
 using AlbumApi.Infrastructure;
+using AlbumApi.Infrastructure.Repository.Albums;
+using AlbumApi.Infrastructure.Repository.Photos;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -34,7 +38,10 @@ namespace AlbumApi
             {
                 options.UseSqlServer("Data Source=(LocalDB)\\MSSQLLocalDB;Initial Catalog=Albums;Integrated Security=True");
             });
-      
+            services.AddScoped<IAlbumRepository, AlbumRepository>();
+            services.AddScoped<IPhotoRepository, PhotoRepository>();
+
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "AlbumApi", Version = "v1" });
@@ -52,7 +59,7 @@ namespace AlbumApi
             }
 
             app.UseHttpsRedirection();
-
+    
             app.UseRouting();
 
             app.UseAuthorization();

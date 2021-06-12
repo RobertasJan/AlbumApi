@@ -26,11 +26,12 @@ namespace AlbumApi.Infrastructure.Repository.Albums
                 throw new Exception("Album not found");
             }
             _db.Albums.Remove(entity);
+            await _db.SaveChangesAsync(cancellationToken);
         }
 
         public async Task<Album> GetAlbum(int id, CancellationToken cancellationToken)
         {
-            var entity = await _db.Albums.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+            var entity = await _db.Albums.Include(x => x.Photos).FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
             if (entity == null)
             {
                 throw new Exception("Album not found");

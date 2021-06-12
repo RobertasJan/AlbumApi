@@ -15,6 +15,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AlbumApi.Domain.Repository\AlbumApi.Domain.Repository.csproj" />
+    <ProjectReference Include="..\AlbumApi.Infrastructure.Repository\AlbumApi.Infrastructure.Repository.csproj" />
     <ProjectReference Include="..\AlbumApi.Infrastructure\AlbumApi.Infrastructure.csproj" />
   </ItemGroup>
 
