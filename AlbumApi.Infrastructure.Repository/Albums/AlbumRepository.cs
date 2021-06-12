@@ -18,6 +18,7 @@ namespace AlbumApi.Infrastructure.Repository.Albums
         {
             _db = dbContext;
         }
+
         public async Task DeleteAlbum(int id, CancellationToken cancellationToken)
         {
             var entity = await _db.Albums.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
