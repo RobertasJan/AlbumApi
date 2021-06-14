@@ -39,7 +39,7 @@ namespace AlbumApi
             services.AddScoped<IAlbumRepository, AlbumRepository>();
             services.AddScoped<IPhotoRepository, PhotoRepository>();
 
-
+            // comment
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "AlbumApi", Version = "v1" });
